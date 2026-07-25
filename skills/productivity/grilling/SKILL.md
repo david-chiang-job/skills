@@ -1,6 +1,6 @@
 ---
 name: grilling
-description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.
+description: Relentless one-question-at-a-time interview to sharpen a plan, decision, or idea, leaving no written record. Use on 'grill' trigger phrases; for planning or architecture work prefer `grill-with-docs`, which keeps the decisions written down.
 ---
 
 Interview me relentlessly about every aspect of this until we reach a shared understanding. Walk down each branch of the decision tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
