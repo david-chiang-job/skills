@@ -52,5 +52,11 @@ This file. Never upstream's concern.
 ## Known upstream breaking changes absorbed
 
 - **2026-08-13 sync (v1.2):** `writing-great-skills` was renamed to
-  `writing-for-agents` (`1fc6573`) and restructured. Anything referring to the
-  old name is stale.
+  `writing-for-agents` (`1fc6573`) and restructured — its `GLOSSARY.md` split
+  into `SKILL.md` (universal) plus `SKILL-MECHANICS.md` (skill-specific).
+  Anything referring to the old name or the old file is stale.
+
+  A rename is not a new skill. This one was briefly muted the same day on the
+  belief that it was newly arrived and newly overlapping a local rule; it had in
+  fact been running model-invoked under its old name since 2026-07-25. Check
+  `git log --follow` before treating a name you have not seen as new.
