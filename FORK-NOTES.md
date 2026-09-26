@@ -7,20 +7,34 @@ shell skill in `ai-dotfiles/claude/skills/` that points back at the upstream
 body, not in an edit here. This file exists so every remaining edit has to be
 justified in writing.
 
-Branch layout: `main` mirrors `upstream/main` untouched. `mine` is `main` plus
-the commits below, and is the branch `~/.claude/skills` links into.
+Branch layout: `mine` is upstream plus the deltas below, and is the branch
+`~/.claude/skills` links into. The upstream baseline to diff against is the
+remote ref `upstream/main`; this fork's own `main` is not maintained.
 
 ## Syncing
 
+Every update lands through a pull request into `mine`, like every other repo
+of this owner. Merge, never rebase: rebasing rewrites the local commits, and
+the only way to publish rewritten commits is a force push.
+
 ```
-git fetch upstream
-git rebase upstream/main        # replays the config commits below
+git fetch upstream origin
+git switch -c sync/<date> origin/mine
+git merge upstream/main
 py ../ai-dotfiles/bootstrap/strip_invocation_flag.py skills/engineering skills/productivity
+# commit any flag changes, add a dated entry below, then:
+gh pr create --base mine
+gh pr merge --merge --delete-branch   # a merge commit; --rebase would rewrite history again
+git switch mine && git pull --ff-only
 py ../ai-dotfiles/bootstrap/bootstrap.py --apply
 ```
 
 Conflicts land on exactly the lines listed here, every time. The resolution is
 always: **keep upstream's prose, re-apply only the switch.**
+
+Until 2026-09-26 this section said `git rebase upstream/main`, which made every
+sync end in a force push; it was switched to merge so the fork follows the same
+PR-then-merge rule as the rest.
 
 ## Why each delta exists
 
@@ -87,3 +101,22 @@ This file. Never upstream's concern.
   Nothing to do: `bootstrap/manifest.toml` links only `engineering` and
   `productivity`, so `in-progress` skills are never installed — which is also
   why upstream's `retro` cannot collide with the local `/retro`.
+
+- **2026-09-26 sync (main tip, 15 commits):** adds `pr` to `in-progress/` and
+  sharpens `retro` (mechanical findings become deterministic checks). Neither
+  is installed yet, so nothing changes at runtime. Merge was clean. This is
+  the first sync done the merge-and-PR way (see Syncing).
+
+  The previous entry's "cannot collide" only held while `retro` sat in
+  `in-progress/`. `release/v1.3` graduates `retro`, `pr` and `implement-spec`
+  into `engineering/`, and a personal skill hides a project skill of the same
+  name with no error. Handled ahead of v1.3, outside this repo:
+  interview-prep renamed its skill to `interaction-review`; `bootstrap.py`
+  now refuses any same-name skill (`test_skill_collisions.py`); and
+  `KEEP_FLAGGED` holds `retro` and `implement-spec`. A rehearsal rebase onto
+  `release/v1.3` replayed all five local commits without conflict.
+
+  Still due when v1.3 reaches main: v1.3 renames `CONTEXT.md` to
+  `GLOSSARY.md` (so `ai-dotfiles/delegation/CONTEXT.md` and the quote in
+  `wait-what-zh` follow), and retires `resolving-merge-conflicts` (its link is
+  pruned by bootstrap; three interview-prep docs name it).
