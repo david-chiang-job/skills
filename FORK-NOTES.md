@@ -87,3 +87,21 @@ This file. Never upstream's concern.
   Nothing to do: `bootstrap/manifest.toml` links only `engineering` and
   `productivity`, so `in-progress` skills are never installed — which is also
   why upstream's `retro` cannot collide with the local `/retro`.
+
+- **2026-09-26 sync (main tip, 15 commits):** adds `pr` to `in-progress/` and
+  sharpens `retro` (mechanical findings become deterministic checks). Neither
+  is installed yet, so nothing changes at runtime. Rebase was clean.
+
+  The previous entry's "cannot collide" only held while `retro` sat in
+  `in-progress/`. `release/v1.3` graduates `retro`, `pr` and `implement-spec`
+  into `engineering/`, and a personal skill hides a project skill of the same
+  name with no error. Handled ahead of v1.3, outside this repo:
+  interview-prep renamed its skill to `interaction-review`; `bootstrap.py`
+  now refuses any same-name skill (`test_skill_collisions.py`); and
+  `KEEP_FLAGGED` holds `retro` and `implement-spec`. A rehearsal rebase onto
+  `release/v1.3` replayed all five local commits without conflict.
+
+  Still due when v1.3 reaches main: v1.3 renames `CONTEXT.md` to
+  `GLOSSARY.md` (so `ai-dotfiles/delegation/CONTEXT.md` and the quote in
+  `wait-what-zh` follow), and retires `resolving-merge-conflicts` (its link is
+  pruned by bootstrap; three interview-prep docs name it).
