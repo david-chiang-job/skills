@@ -7,20 +7,34 @@ shell skill in `ai-dotfiles/claude/skills/` that points back at the upstream
 body, not in an edit here. This file exists so every remaining edit has to be
 justified in writing.
 
-Branch layout: `main` mirrors `upstream/main` untouched. `mine` is `main` plus
-the commits below, and is the branch `~/.claude/skills` links into.
+Branch layout: `mine` is upstream plus the deltas below, and is the branch
+`~/.claude/skills` links into. The upstream baseline to diff against is the
+remote ref `upstream/main`; this fork's own `main` is not maintained.
 
 ## Syncing
 
+Every update lands through a pull request into `mine`, like every other repo
+of this owner. Merge, never rebase: rebasing rewrites the local commits, and
+the only way to publish rewritten commits is a force push.
+
 ```
-git fetch upstream
-git rebase upstream/main        # replays the config commits below
+git fetch upstream origin
+git switch -c sync/<date> origin/mine
+git merge upstream/main
 py ../ai-dotfiles/bootstrap/strip_invocation_flag.py skills/engineering skills/productivity
+# commit any flag changes, add a dated entry below, then:
+gh pr create --base mine
+gh pr merge --merge --delete-branch   # a merge commit; --rebase would rewrite history again
+git switch mine && git pull --ff-only
 py ../ai-dotfiles/bootstrap/bootstrap.py --apply
 ```
 
 Conflicts land on exactly the lines listed here, every time. The resolution is
 always: **keep upstream's prose, re-apply only the switch.**
+
+Until 2026-09-26 this section said `git rebase upstream/main`, which made every
+sync end in a force push; it was switched to merge so the fork follows the same
+PR-then-merge rule as the rest.
 
 ## Why each delta exists
 
@@ -90,7 +104,8 @@ This file. Never upstream's concern.
 
 - **2026-09-26 sync (main tip, 15 commits):** adds `pr` to `in-progress/` and
   sharpens `retro` (mechanical findings become deterministic checks). Neither
-  is installed yet, so nothing changes at runtime. Rebase was clean.
+  is installed yet, so nothing changes at runtime. Merge was clean. This is
+  the first sync done the merge-and-PR way (see Syncing).
 
   The previous entry's "cannot collide" only held while `retro` sat in
   `in-progress/`. `release/v1.3` graduates `retro`, `pr` and `implement-spec`
