@@ -11,6 +11,15 @@ Branch layout: `mine` is upstream plus the deltas below, and is the branch
 `~/.claude/skills` links into. The upstream baseline to diff against is the
 remote ref `upstream/main`; this fork's own `main` is not maintained.
 
+Why `upstream/main` and not a release branch or a tag (reviewed 2026-09-27):
+upstream's `release/vX.Y` branches are staging. Each one is merged into main
+and tagged there before it ships (v1.1, v1.2 both went that way), so main
+never misses a release; it receives it on release day. A release branch is
+still being edited, and a new minor means a new branch name to re-point to.
+Tags lag too far to track: the last one, `v1.2.3`, is from 2026-08-06, and main
+has moved 54 commits since. What main does not promise is that its tip loads,
+which is what the check step in Syncing is for.
+
 ## Syncing
 
 Every update lands through a pull request into `mine`, like every other repo
@@ -23,12 +32,24 @@ git merge-tree --write-tree --name-only origin/mine upstream/main   # preview: e
 git switch -c sync/<date> origin/mine
 git merge upstream/main
 py ../ai-dotfiles/bootstrap/strip_invocation_flag.py skills/engineering skills/productivity
-# commit any flag changes, add a dated entry below, then:
-gh pr create --base mine
-gh pr merge --merge --delete-branch   # a merge commit; --rebase would rewrite history again
+py ../ai-dotfiles/bootstrap/check_skill_frontmatter.py --baseline origin/mine skills/engineering skills/productivity
+# exit 1 = a skill would be dropped: stop and do not merge. Otherwise commit
+# any flag changes, add a dated entry below (with the ADDED/REMOVED list), then:
+gh pr create --repo david-chiang-job/skills --base mine
+gh pr merge sync/<date> --repo david-chiang-job/skills --merge --delete-branch   # a merge commit; --rebase would rewrite history again
 git switch mine && git pull --ff-only
 py ../ai-dotfiles/bootstrap/bootstrap.py --apply
 ```
+
+The check line exists because a SKILL.md whose frontmatter does not parse is
+dropped from the skill list with no error. Replayed on 2026-09-27 against the
+commit between #905 and #911 (see the 2026-08-29 entry below), it fails four
+installed skills; one commit later it passes. It also lists skills that came
+or went since the old `mine`, which is for reading, not a failure.
+
+`--repo` is on every `gh` line because this clone has two remotes and no
+`gh repo set-default`, so without it `gh` may pick `mattpocock/skills` and open
+the PR in public.
 
 Conflicts land on exactly the lines listed here, every time. The resolution is
 always: **keep upstream's prose, re-apply only the switch.**
@@ -99,8 +120,8 @@ This file. Never upstream's concern.
   YAML front-matter it created (#911, six descriptions whose new `: ` sequences
   made the skills unparseable). Both are in this sync, so the net effect is
   none — but a sync landing between those two commits would have silently
-  dropped `code-review`, `to-spec`, and `setup-matt-pocock-skills` from
-  discovery. Worth remembering the next time "main tip is fine" comes up.
+  dropped `code-review`, `to-spec`, `setup-matt-pocock-skills`, and
+  `wait-what` from discovery (the fourth found by the 2026-09-27 replay). Worth remembering the next time "main tip is fine" comes up.
 
   Two new skills arrived in `skills/in-progress/` (`retro`, `implement-spec`).
   Nothing to do: `bootstrap/manifest.toml` links only `engineering` and
