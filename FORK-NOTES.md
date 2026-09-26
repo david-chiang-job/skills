@@ -19,6 +19,7 @@ the only way to publish rewritten commits is a force push.
 
 ```
 git fetch upstream origin
+git merge-tree --write-tree --name-only origin/mine upstream/main   # preview: exit 0 = clean, else lists conflicting files
 git switch -c sync/<date> origin/mine
 git merge upstream/main
 py ../ai-dotfiles/bootstrap/strip_invocation_flag.py skills/engineering skills/productivity
@@ -34,7 +35,11 @@ always: **keep upstream's prose, re-apply only the switch.**
 
 Until 2026-09-26 this section said `git rebase upstream/main`, which made every
 sync end in a force push; it was switched to merge so the fork follows the same
-PR-then-merge rule as the rest.
+PR-then-merge rule as the rest. Rebase's one selling point, seeing every
+local delta at a glance, survives the switch: after a full merge,
+`git diff upstream/main mine` is exactly that list. Measured the same day: the
+first merge-based sync needed zero hand-resolved hunks, and a dry-run merge of
+`release/v1.3` was clean too.
 
 ## Why each delta exists
 
@@ -46,7 +51,7 @@ outside, so switching it means editing the upstream file. Which skills are
 switched, and why, is declared in one place:
 `ai-dotfiles/bootstrap/strip_invocation_flag.py` (`KEEP_FLAGGED` /
 `FORCE_FLAGGED`). Do not hand-edit a SKILL.md to change this — add the name to a
-list there and re-run the script, so the next rebase reproduces it.
+list there and re-run the script, so the next sync reproduces it.
 
 ### 2. Two description rewrites
 
