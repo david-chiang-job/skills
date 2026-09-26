@@ -10,6 +10,9 @@ justified in writing.
 Branch layout: `mine` is upstream plus the deltas below, and is the branch
 `~/.claude/skills` links into. The upstream baseline to diff against is the
 remote ref `upstream/main`; this fork's own `main` is not maintained.
+`mine` is also the fork's GitHub default branch (since 2026-09-27): the global
+default-branch guard reads `origin/HEAD`, so while that pointed at `main` a
+direct commit to `mine` went through unchecked.
 
 Why `upstream/main` and not a release branch or a tag (reviewed 2026-09-27):
 upstream's `release/vX.Y` branches are staging. Each one is merged into main
