@@ -148,4 +148,20 @@ This file. Never upstream's concern.
   Still due when v1.3 reaches main: v1.3 renames `CONTEXT.md` to
   `GLOSSARY.md` (so `ai-dotfiles/delegation/CONTEXT.md` and the quote in
   `wait-what-zh` follow), and retires `resolving-merge-conflicts` (its link is
-  pruned by bootstrap; three interview-prep docs name it).
+  pruned by bootstrap; three interview-prep docs name it). Done in the
+  2026-10-01 entry below.
+
+- **2026-10-01 sync (v1.3, main tip `d81f3a1`, 21 commits):** v1.3 reached
+  main through #1120. Merge was clean (merge-tree preview exit 0, zero
+  hand-resolved hunks); the strip script changed nothing.
+  Frontmatter check against the old `mine`:
+  ADDED `implement-spec`, `pr`, `retro`; REMOVED `resolving-merge-conflicts`.
+  `retro` and `implement-spec` stay user-only through `KEEP_FLAGGED`, as
+  planned in the previous entry; `pr` ships model-invocable. The
+  `CONTEXT.md` to `GLOSSARY.md` rename and the retired skill were followed
+  up in `ai-dotfiles` and `interview-prep` the same day.
+
+  The check step could not run at first: `PyYAML` was missing on the machine
+  even though `python_sync.py` reported the Python spec as matching, because
+  the spec did not list it. `ai-dotfiles` #104 added `pyyaml` to
+  `manifest.toml` `[python]`, so the next sync on any machine has it.
