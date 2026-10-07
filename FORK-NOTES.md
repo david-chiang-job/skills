@@ -165,3 +165,11 @@ This file. Never upstream's concern.
   even though `python_sync.py` reported the Python spec as matching, because
   the spec did not list it. `ai-dotfiles` #104 added `pyyaml` to
   `manifest.toml` `[python]`, so the next sync on any machine has it.
+
+- **2026-10-07 sync (main tip `f3fc563`, 49 commits):** pulled in mainly for
+  `3da8c01` (`code-review` now searches for standards files instead of
+  expecting one fixed name). Merge was clean (merge-tree preview exit 0, git
+  auto-merged `ask-matt`, `grilling` and `handoff` around our deltas); the
+  strip script changed nothing. Frontmatter check against the old `mine`:
+  same skill set, nothing ADDED or REMOVED. `git diff upstream/main` still
+  lists only the known deltas (two description overrides, stripped flags).
