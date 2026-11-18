@@ -77,6 +77,13 @@ switched, and why, is declared in one place:
 `FORCE_FLAGGED`). Do not hand-edit a SKILL.md to change this — add the name to a
 list there and re-run the script, so the next sync reproduces it.
 
+Codex reads a different switch, `policy.allow_implicit_invocation` in each
+skill's `agents/openai.yaml`, so the same script rewrites that value to match
+the Claude state. Since 2026-11-18 this means `ask-matt`,
+`grill-with-docs` and `handoff` carry `allow_implicit_invocation: true` here,
+while upstream ships `false`. Expect the same conflict on that line at sync
+time; resolve it the same way, by re-running the script.
+
 ### 2. Two description rewrites
 
 `grilling` and `grill-with-docs` carry locally written `description:` lines that
