@@ -79,29 +79,12 @@ list there and re-run the script, so the next sync reproduces it.
 
 Codex reads a different switch, `policy.allow_implicit_invocation` in each
 skill's `agents/openai.yaml`, so the same script rewrites that value to match
-the Claude state. Since 2026-11-18 this means `ask-matt`,
-`grill-with-docs` and `handoff` carry `allow_implicit_invocation: true` here,
-while upstream ships `false`. Expect the same conflict on that line at sync
-time; resolve it the same way, by re-running the script.
+the Claude state. Since 2026-11-19 this means `ask-matt` and `handoff`
+carry `allow_implicit_invocation: true` here, while upstream ships `false`.
+Expect the same conflict on that line at sync time; resolve it the same way,
+by re-running the script.
 
-### 2. Two description rewrites
-
-`grilling` and `grill-with-docs` carry locally written `description:` lines that
-disambiguate the pair. Upstream's own descriptions do not cross-reference each
-other, and the model picks between them from the description alone — so this is
-the one place where citing upstream verbatim measurably degrades routing.
-
-Reviewed 2026-08-13 and kept. Re-check on each sync: upstream has been actively
-aligning this family (`grill-me-align`, PR #788), and the moment its own text
-disambiguates, delete these two overrides and go back to citing it.
-
-Re-checked 2026-08-29 and kept again: upstream's `grilling` description still
-never names `grill-with-docs`, and vice versa, so the routing problem these two
-lines solve is still there. Note both overrides still carry em-dashes, which
-upstream swept out of the repo in #905 — deliberate, since they are our prose,
-not a stale copy of upstream's.
-
-### 3. `FORK-NOTES.md`
+### 2. `FORK-NOTES.md`
 
 This file. Never upstream's concern.
 
@@ -125,6 +108,15 @@ This file. Never upstream's concern.
   leave that suggestion pointing at something the model cannot call. The cost is
   a new permanent conflict site — this skill now carries two deltas at once, the
   description override and the stripped flag, on adjacent lines.
+
+  Superseded 2026-11-19: `grill-with-docs` is user-only again, listed in
+  `KEEP_FLAGGED` so upstream's flag stays. The `interview-prep` hook that named
+  it is gone, and the local task workflow sends requirement interviews to
+  `grilling`: the docs half writes ADRs and a glossary, while decisions here are
+  kept in the issue tracker. With the model no longer choosing between the
+  pair, the two local `description:` rewrites that told them apart (formerly
+  delta 2) had nothing left to do, so both files are back to upstream's
+  frontmatter and that conflict site is gone.
 
   Also absorbed: the repo-wide em-dash sweep (#905) and the fix for the invalid
   YAML front-matter it created (#911, six descriptions whose new `: ` sequences
