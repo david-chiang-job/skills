@@ -81,7 +81,9 @@ Codex reads a different switch, `policy.allow_implicit_invocation` in each
 skill's `agents/openai.yaml`, so the same script rewrites that value to match
 the Claude state. Since 2026-11-19 this means `ask-matt` and `handoff`
 carry `allow_implicit_invocation: true` here, while upstream ships `false`.
-Expect the same conflict on that line at sync time; resolve it the same way,
+Since 2026-11-20 `research` goes the other way (`FORCE_FLAGGED`): its SKILL.md
+carries the flag and its `openai.yaml` says `false`, while upstream ships both open.
+Expect the same conflict on those lines at sync time; resolve it the same way,
 by re-running the script.
 
 ### 2. `FORK-NOTES.md`
